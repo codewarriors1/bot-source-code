@@ -50,20 +50,36 @@ async def greet(ctx, timezonename):
 
 
 @client.command()
-async def info(ctx):
+async def help(ctx):
     embed = discord.Embed(
         title = "Introduction to AutoMod",
-        descriptiion = "AutoMod is a bot made by @wakandawarrior and @Lxcky to spice up and try to aid all of those involved in this server. If you have any ideas as to how I may be improved, please talk to us (preferably not DMs)",
+        description = """AutoMod is a bot made by @wakandawarrior and @Lxcky to spice up and try to aid all of those involved in this server. If you have any ideas as to how I may be improved, please talk to us (preferably not DMs)
+**__fun commands__**
+slap @user - slaps the mentioned user.
+
+**__moderation commands__**
+clear amount - clears as many messages as you want.
+ban @user reason - bans the mentioned user and dms them the reason
+kick @user reason - kicks the mentioned user and dms them the reason
+mute @user mutes the user until you unmute them
+unmute @user unmutes the user so they will be able to talk again
+server - gives information about the serer
+
+to use the commands you must have certain permissions example manage messgae permissions to clear messages with the bot,ban members permissions to ban members using the bot,kick members permissions to kick members with the bot.
+**__Plain old nice commands__**
+greet  - We will just greet you with a good morning, afternoon and evening (depending on the time of course)
+if you need help say !support
+""",
         colour = discord.Colour(int("0dfaab", 16))
     )
-    
+
+    icon = str(ctx.guild.icon_url)
     embed.set_footer(text="Created using the power of teamwork")
-    embed.set_image(url='https://cdn.discordapp.com/avatars/684973286438076437/11d7951e4e89d4b97b7f93b641770917.png')
+    embed.set_image(url=icon))
     embed.set_thumbnail(url='https://cdn.discordapp.com/avatars/750429563028242512/2642f6de2a014e54f1ef29ccdfa9a1a3.png')
-    embed.set_author(name='Nana', icon_url='https://cdn.discordapp.com/avatars/684973286438076437/11d7951e4e89d4b97b7f93b641770917.png')
-    embed.add_field(name='!slaphard',value='Use slaphard to intentionally target a person or more with the wrath of your hand.    For example, !slaphard @crocodilefag @wakandawarrior someone must face my wrath', inline=False)
-    embed.add_field(name='!slap', value='!slap is used to randomly targeta single person.A reason why also needs to be included. For example, !slap you stole my virignity', inline=False) 
-    
+    embed.set_author(name='@wakandawarrior & @Lxcky', icon_url='https://cdn.discordapp.com/avatars/684973286438076437/11d7951e4e89d4b97b7f93b641770917.png')
+    embed.add_field(name='!server',value='', inline=False)
+    embed.add_field(name='!support', value='!support can be used to gain access to our tesing server' , inline=False) 
     await ctx.send(embed=embed)
     
 @client.command()
@@ -134,6 +150,83 @@ async def level(ctx, member: discord.Member = None):
             users = json.load(f)
         lvl = users[str(id)]['level']
         await ctx.send(f'{member} is at level {lvl}!')
+	
+@bot.command()
+@commands.has_permissions(kick_members=True)
+async def kick(ctx, member: discord.Member, *, reason="none"):
+  await member.send("you have been kicked:" + reason)
+  await member.kick(reason=reason)
 
-    
+
+
+@bot.command()
+@commands.has_permissions(ban_members=True)
+async def ban(ctx, member: discord.Member, *, reason="none"):
+  await member.send("you have been banned:" + reason)
+  await member.ban(reason=reason)
+
+  channel = bot.get_channel(765676846410760222)
+  await channel.send ("member has been bnned")
+
+@bot.command()
+@commands.has_permissions(manage_messages=True)
+async def clear(
+        ctx,
+        amount=2,
+):
+  await ctx.message.delete()
+  await ctx.channel.purge(limit=int(amount))
+  author = ctx.author
+  channel = bot.get_channel(765676846410760222)
+  await channel.send ("{author.mention} has cleared amount of messages")
+
+@bot.command()
+async def support(ctx):
+  await ctx.send("here is our support server! https://discord.gg/tsYHXq3")
+		    
+@bot.command()
+@commands.has_permissions(manage_messages=True)
+async def mute(ctx,member : discord.Member):
+  muted = ctx.guild.get_role(765460547129835540)
+
+  await member.add_roles(muted)
+  await ctx.send(member.mention + " has been muted")
+
+@bot.command()
+@commands.has_permissions(manage_messages=True)
+async def unmute(ctx,member : discord.Member):
+  muted = ctx.guild.get_role(765460547129835540)
+
+  await member.remove_roles(muted)
+  await ctx.send(member.mention + " has been unmuted")
+
+@bot.command()
+@commands.has_permissions(manage_messages=True)
+async def assignrole(ctx, member : discord.Member, rolename):
+    role = discord.utils.get(member.guild.roles, name=rolename)
+    await discord.Member.add_roles(member, role)
+
+@bot.command()
+async def server(ctx):
+    name = str(ctx.guild.name)
+    description = str(ctx.guild.description)
+
+    owner = str(ctx.guild.owner)
+    id = str(ctx.guild.id)
+    region = str(ctx.guild.region)
+    memberCount = str(ctx.guild.member_count)
+
+    icon = str(ctx.guild.icon_url)
+
+    embed = discord.Embed(
+        title=name + " Server Information",
+        description=description,
+        color=discord.Color.blue()
+    )
+    embed.set_thumbnail(url=icon)
+    embed.add_field(name="Owner", value=owner, inline=True)
+    embed.add_field(name="Server ID", value=id, inline=True)
+    embed.add_field(name="Region", value=region, inline=True)
+    embed.add_field(name="Member Count", value=memberCount, inline=True)	
+
 client.run(token)
