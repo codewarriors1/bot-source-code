@@ -54,6 +54,11 @@ async def help(ctx):
     embed = discord.Embed(
         title = "Introduction to AutoMod",
         description = """AutoMod is a bot made by @wakandawarrior and @Lxcky to spice up and try to aid all of those involved in this server. If you have any ideas as to how I may be improved, please talk to us (preferably not DMs)
+**__Level-up system__**
+Each user will gain experience for each message sent in this server to directly to the bot. 
+There may be special features to be unlocked if the server gains enough participation, so please try to contribute
+to the further development of the bot
+
 **__fun commands__**
 slap @user - slaps the mentioned user.
 
@@ -63,7 +68,7 @@ ban @user reason - bans the mentioned user and dms them the reason
 kick @user reason - kicks the mentioned user and dms them the reason
 mute @user mutes the user until you unmute them
 unmute @user unmutes the user so they will be able to talk again
-server - gives information about the serer
+server - gives information about the server
 
 to use the commands you must have certain permissions example manage messgae permissions to clear messages with the bot,ban members permissions to ban members using the bot,kick members permissions to kick members with the bot.
 **__Plain old nice commands__**
