@@ -36,19 +36,28 @@ async def hello(ctx):
     await ctx.send("Hi there, " + str(ctx.author) + " of the " + str(ctx.guild) + ".")
 
 @client.command()
-async def greet(ctx, timezone):
-	cur_tz = timezone(timezone)
-	current_time = cur_tz.localize(nowtime)
+async def greet(ctx, timezonename):
+  cur_tz = pytz.timezone(timezonename)
+  current_time = cur_tz.localize(nowtime)
+  if current_time >= '06:00' and current_time < '12:00':
+    await ctx.send("Good morning, " + ctx.message.author.mention + ". The time is " + current_time)
+  elif current_time >= '12:00' and current_time < '17:00':
+    await ctx.send("Good afternoon, " + ctx.message.author.mention + ". The time is " + current_time)
+  elif current_time >= '17:00' and current_time < '19:00':
+    await ctx.send("Good evening, " + ctx.message.author.mention + ". The time is " + current_time)
+  else:
+    await ctx.send("Good night, " + ctx.message.author.mention + ". The time is " + current_time + ". You should probably go to sleep.")
+
 
 @client.command()
 async def info(ctx):
     embed = discord.Embed(
-        title = "Introduction to Slither and its commands",
-        descriptiion = "Slither is a bot made by @wakandawarrior to spice up and try to aid all of those involved in this server. If you have any ideas as to how I may be improved, please talk to him",
+        title = "Introduction to AutoMod",
+        descriptiion = "AutoMod is a bot made by @wakandawarrior and @Lxcky to spice up and try to aid all of those involved in this server. If you have any ideas as to how I may be improved, please talk to us (preferably not DMs)",
         colour = discord.Colour(int("0dfaab", 16))
     )
     
-    embed.set_footer(text="Created by an absolute novice")
+    embed.set_footer(text="Created using the power of teamwork")
     embed.set_image(url='https://cdn.discordapp.com/avatars/684973286438076437/11d7951e4e89d4b97b7f93b641770917.png')
     embed.set_thumbnail(url='https://cdn.discordapp.com/avatars/750429563028242512/2642f6de2a014e54f1ef29ccdfa9a1a3.png')
     embed.set_author(name='Nana', icon_url='https://cdn.discordapp.com/avatars/684973286438076437/11d7951e4e89d4b97b7f93b641770917.png')
