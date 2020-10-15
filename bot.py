@@ -6,7 +6,7 @@ from datetime import datetime
 import pytz
 
 client = commands.Bot(command_prefix="!")
-local_tz = timezone('Asia/Dubai')
+local_tz = pytz.timezone('Asia/Dubai')
 nowtime = datetime.now(local_tz)
 
 class Slapper(commands.Converter):
@@ -50,7 +50,7 @@ async def greet(ctx, timezonename):
 
 
 @client.command()
-async def help(ctx):
+async def about(ctx):
     embed = discord.Embed(
         title = "Introduction to AutoMod",
         description = """AutoMod is a bot made by @wakandawarrior and @Lxcky to spice up and try to aid all of those involved in this server. If you have any ideas as to how I may be improved, please talk to us (preferably not DMs)
@@ -80,11 +80,11 @@ if you need help say !support
 
     icon = str(ctx.guild.icon_url)
     embed.set_footer(text="Created using the power of teamwork")
-    embed.set_image(url=icon))
+    embed.set_image(url=icon)
     embed.set_thumbnail(url='https://cdn.discordapp.com/avatars/750429563028242512/2642f6de2a014e54f1ef29ccdfa9a1a3.png')
     embed.set_author(name='@wakandawarrior & @Lxcky', icon_url='https://cdn.discordapp.com/avatars/684973286438076437/11d7951e4e89d4b97b7f93b641770917.png')
     embed.add_field(name='!server',value='', inline=False)
-    embed.add_field(name='!support', value='!support can be used to gain access to our tesing server' , inline=False) 
+    embed.add_field(name='!support', value='!support can be used to gain access to our tesing server' , inline=False)
     await ctx.send(embed=embed)
     
 @client.command()
@@ -107,16 +107,18 @@ async def on_member_join(member):
 @client.event
 async def on_message(message):
     if message.author.bot == False:
-        with open('users.json', 'r') as f:
-            users = json.load(f)
+      try:
+          with open('users.json', 'r') as f:
+              users = json.load(f)
 
-        await update_data(users, message.author)
-        await add_experience(users, message.author, 5)
-        await level_up(users, message.author, message)
+          await update_data(users, message.author)
+          await add_experience(users, message.author, 5)
+          await level_up(users, message.author, message)
 
-        with open('users.json', 'w') as f:
-            json.dump(users, f)
-
+          with open('users.json', 'w') as f:
+              json.dump(users, f)
+      except:
+        print("We forgot to add the JSON file which the level-up function relies on")
     await client.process_commands(message)
 
 
@@ -156,62 +158,60 @@ async def level(ctx, member: discord.Member = None):
         lvl = users[str(id)]['level']
         await ctx.send(f'{member} is at level {lvl}!')
 	
-@bot.command()
+
+@client.command()
 @commands.has_permissions(kick_members=True)
-async def kick(ctx, member: discord.Member, *, reason="none"):
-  await member.send("you have been kicked:" + reason)
-  await member.kick(reason=reason)
+async def kick(ctx, member: discord.Member, *,reason="for being a prick"):
+  await member.send("You have been kicked" + reason)
+  await member.kick(reason=reason)
 
-
-
-@bot.command()
+@client.command()
 @commands.has_permissions(ban_members=True)
-async def ban(ctx, member: discord.Member, *, reason="none"):
-  await member.send("you have been banned:" + reason)
-  await member.ban(reason=reason)
+async def ban(ctx, member: discord.Member, *, reason="for being a prick"):
+  await member.send("You have been banned" + reason)
+  await member.ban(reason=reason)
+  channel = client.get_channel(765676846410760222)
+  await channel.send ("member has been bnned")
 
-  channel = bot.get_channel(765676846410760222)
-  await channel.send ("member has been bnned")
-
-@bot.command()
+@client.command()
 @commands.has_permissions(manage_messages=True)
 async def clear(
         ctx,
         amount=2,
 ):
-  await ctx.message.delete()
-  await ctx.channel.purge(limit=int(amount))
-  author = ctx.author
-  channel = bot.get_channel(765676846410760222)
-  await channel.send ("{author.mention} has cleared amount of messages")
+  await ctx.message.delete()
+  await ctx.channel.purge(limit=int(amount))
+  author = ctx.author
+  channel = client.get_channel(765676846410760222)
+  await channel.send ("{author.mention} has cleared amount of messages")
 
-@bot.command()
+@client.command()
 async def support(ctx):
-  await ctx.send("here is our support server! https://discord.gg/tsYHXq3")
+  await ctx.send("here is our support server! https://discord.gg/YGJFXz")
 		    
-@bot.command()
+@client.command()
 @commands.has_permissions(manage_messages=True)
 async def mute(ctx,member : discord.Member):
-  muted = ctx.guild.get_role(765460547129835540)
+  muted = ctx.guild.get_role(765460547129835540)
 
-  await member.add_roles(muted)
-  await ctx.send(member.mention + " has been muted")
+  await member.add_roles(muted)
+  await ctx.send(member.mention + " has been muted")
 
-@bot.command()
+@client.command()
 @commands.has_permissions(manage_messages=True)
 async def unmute(ctx,member : discord.Member):
-  muted = ctx.guild.get_role(765460547129835540)
+  muted = ctx.guild.get_role(765460547129835540)
 
-  await member.remove_roles(muted)
-  await ctx.send(member.mention + " has been unmuted")
+  await member.remove_roles(muted)
+  await ctx.send(member.mention + " has been unmuted")
 
-@bot.command()
+@client.command()
 @commands.has_permissions(manage_messages=True)
 async def assignrole(ctx, member : discord.Member, rolename):
     role = discord.utils.get(member.guild.roles, name=rolename)
     await discord.Member.add_roles(member, role)
 
-@bot.command()
+@client.command()
 async def server(ctx):
     name = str(ctx.guild.name)
     description = str(ctx.guild.description)
@@ -234,4 +234,4 @@ async def server(ctx):
     embed.add_field(name="Region", value=region, inline=True)
     embed.add_field(name="Member Count", value=memberCount, inline=True)	
 
-client.run(token)
+client.run("NzY1Nzk3MDgwMjQ1MzM4MTIz.X4aCGw.FXgafJWoLd2OAFOKuUjrv-xUimo")
