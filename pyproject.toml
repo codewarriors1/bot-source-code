@@ -8,6 +8,8 @@ authors = ["repl.it user <replituser@example.com>"]
 python = "^3.8"
 discord = "^1.0.1"
 pytz = "^2020.1"
+colorama = "^0.4.4"
+pandas = "^1.1.3"
 
 [tool.poetry.dev-dependencies]
 
