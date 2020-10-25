@@ -7,7 +7,7 @@ import random
 
 gayrate = ["you are 1% gay", "you are 2% gay", "you are 3% gay","you are a-ok", "", "","", "", "",]
 
-d = ["=", "==", "===", "====",]
+number = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"]
 
 class fun(commands.Cog):
   def __init__(self, client):
@@ -49,9 +49,11 @@ class fun(commands.Cog):
   async def gayrate(self, ctx,):
     await ctx.send( random.choice(gayrate)) 
 
-  commands.command()
-  async def lol(self,ctx):
-    await ctx.send(random.choice(d))
+  @commands.command(aliases = ['random number', 'randomn', 'random n'])
+  async def random(ctx):
+	  numbers = random.range(1,69)
+	  await ctx.send(random.choice(numbers))
+  
    
 def setup(client):
 	client.add_cog(fun(client))
