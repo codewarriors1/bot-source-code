@@ -38,7 +38,7 @@ class mod(commands.Cog):
 		await ctx.channel.purge(limit=int(amount))
 		author = ctx.author
 		channel = commands.get_channel(765676846410760222)
-		await channel.send ("{ctx.author}" "has cleared amount of messages")
+		await channel.send (f"{author}" "has cleared amount of messages")
 
 	@commands.command()
 	@commands.has_permissions(ban_members=True)
