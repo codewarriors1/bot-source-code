@@ -93,4 +93,4 @@ colour = discord.Colour(int("f0d869", 16))
 
   await ctx.send(embed=embed)
 
-client.run("NzY1Nzk3MDgwMjQ1MzM4MTIz.X4aCGw.8Kiu4SRsIp8HC7xi7QJT7fB76sg")
+client.run("NzY1Nzk3MDgwMjQ1MzM4MTIz.X4aCGw.lEsprh9Fe4I-9XffVfNle85iJ-I")
